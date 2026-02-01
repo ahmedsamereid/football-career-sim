@@ -61,7 +61,7 @@ header {
     animation: fadeIn 0.4s ease;
 }
 
-/* Split View */
+/* Split View (Desktop vs Mobile) */
 .split-view { display: flex; gap: 40px; height: 100%; align-items: center; }
 .panel-left, .panel-right {
     flex: 1; background: var(--bg-panel); padding: 20px;
@@ -183,13 +183,6 @@ h2 { margin-top: 0; font-family: 'Teko', sans-serif; font-size: 2.5rem; letter-s
 }
 .highlight-stat span { color: var(--accent); font-weight: bold; font-size: 1.5rem; margin-left: 10px; }
 
-@media (max-width: 768px) {
-    .main-container { width: 100%; min-height: 100vh; border-radius: 0; border: none; }
-    .split-view { flex-direction: column; height: auto; }
-    .panel-left, .panel-right { width: 100%; height: 400px; }
-    .dashboard-grid { grid-template-columns: 1fr; }
-}
-
 /* LOGO SAFETY FALLBACK */
 .club-logo-img { width: 50px; height: 50px; object-fit: contain; background-color: rgba(255,255,255,0.05); border-radius: 50%; }
 .fallback-badge {
@@ -197,4 +190,33 @@ h2 { margin-top: 0; font-family: 'Teko', sans-serif; font-size: 2.5rem; letter-s
     font-family: 'Teko', sans-serif; font-weight: bold; color: #fff; font-size: 1.2rem;
     border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
     box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-shadow: 1px 1px 2px black;
+}
+
+/* NEW: Difficulty Buttons (Responsive) */
+.difficulty-btn-group {
+    display: flex; gap: 10px; margin-top: 15px; width: 100%; justify-content: center;
+}
+.diff-btn {
+    flex: 1; padding: 12px; background: #333; border: 2px solid #555;
+    color: #b0b0b0; cursor: pointer; border-radius: 8px; transition: all 0.2s;
+    font-family: 'Teko', sans-serif; font-size: 1.2rem; text-transform: uppercase;
+}
+.diff-btn:hover { background: #444; color: #fff; border-color: #888; }
+.diff-btn.selected {
+    background: var(--accent); color: #000; border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.4); transform: scale(1.05);
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 768px) {
+    .main-container { width: 100%; min-height: 100vh; border-radius: 0; border: none; }
+    .split-view { flex-direction: column; height: auto; padding-bottom: 20px; }
+    .panel-left, .panel-right { width: 100%; height: auto; min-height: 400px; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    
+    /* Adjust difficulty buttons for touch */
+    .diff-btn { font-size: 1rem; padding: 10px; }
+    
+    /* Pitch adjustment */
+    .pitch-container { height: 350px; }
 }
