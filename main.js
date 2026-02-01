@@ -15,26 +15,30 @@ const COUNTRIES = [
 
 // CLUB DB: Includes File Names from your upload + Elite Clubs
 // colors: [Background, Text] for fallback generation
+/* ======================================================
+   1. DATABASE (Matched with your CMD file list)
+   ====================================================== */
+
 const CLUB_DB = [
     // --- TIER 1: ELITE (OVR 85+) ---
     { id: "rm", file: "Real Madrid.png", name: "Real Madrid", country: "Spain", tier: 1, str: 92, colors: ["#fff", "#000"] },
-    { id: "city", file: "Man City.png", name: "Man City", country: "England", tier: 1, str: 91, colors: ["#6CABDD", "#fff"] },
-    { id: "bay", file: "Bayern.png", name: "Bayern Munich", country: "Germany", tier: 1, str: 89, colors: ["#DD0000", "#fff"] },
-    { id: "liv", file: "Liverpool.png", name: "Liverpool", country: "England", tier: 1, str: 87, colors: ["#C8102E", "#fff"] },
-    { id: "psg", file: "PSG.png", name: "Paris SG", country: "France", tier: 1, str: 86, colors: ["#004170", "#fff"] },
-    { id: "bar", file: "Barcelona.png", name: "Barcelona", country: "Spain", tier: 1, str: 86, colors: ["#A50044", "#fff"] },
+    { id: "city", file: "Manchester City.png", name: "Man City", country: "England", tier: 1, str: 91, colors: ["#6CABDD", "#fff"] },
+    { id: "bay", file: "Bayern Munich.png", name: "Bayern Munich", country: "Germany", tier: 1, str: 89, colors: ["#DD0000", "#fff"] },
+    { id: "liv", file: "Liverpool FC.png", name: "Liverpool", country: "England", tier: 1, str: 87, colors: ["#C8102E", "#fff"] },
+    { id: "psg", file: "Paris Saint-Germain.png", name: "Paris SG", country: "France", tier: 1, str: 86, colors: ["#004170", "#fff"] },
+    { id: "bar", file: "FC Barcelona.png", name: "Barcelona", country: "Spain", tier: 1, str: 86, colors: ["#A50044", "#fff"] },
+    { id: "int", file: "Inter Milan.png", name: "Inter", country: "Italy", tier: 1, str: 85, colors: ["#0068A8", "#fff"] },
+    { id: "ars", file: "Arsenal FC.png", name: "Arsenal", country: "England", tier: 1, str: 86, colors: ["#EF0107", "#fff"] },
 
-    // --- TIER 2: STRONG / EURO LEAGUE (OVR 76-84) ---
+    // --- TIER 2: STRONG (OVR 76-84) ---
     { id: "acm", file: "AC Milan.png", name: "AC Milan", country: "Italy", tier: 2, str: 82, colors: ["#FB090B", "#000"] },
-    { id: "int", file: "Inter Milan.png", name: "Inter", country: "Italy", tier: 2, str: 83, colors: ["#0068A8", "#000"] },
-    { id: "dor", file: "BVB.png", name: "Dortmund", country: "Germany", tier: 2, str: 81, colors: ["#FDE100", "#000"] },
-    { id: "atm", file: "Atletico.png", name: "Atletico Madrid", country: "Spain", tier: 2, str: 82, colors: ["#CB3524", "#fff"] },
+    { id: "dor", file: "Borussia Dortmund.png", name: "Dortmund", country: "Germany", tier: 2, str: 81, colors: ["#FDE100", "#000"] },
+    { id: "atm", file: "Atlético de Madrid.png", name: "Atletico Madrid", country: "Spain", tier: 2, str: 82, colors: ["#CB3524", "#fff"] },
     { id: "stut", file: "VfB Stuttgart.png", name: "Stuttgart", country: "Germany", tier: 2, str: 79, colors: ["#E30613", "#fff"] },
     { id: "vil", file: "Villarreal CF.png", name: "Villarreal", country: "Spain", tier: 2, str: 80, colors: ["#F5E60D", "#000"] },
-    { id: "fio", file: "ACF Fiorentina.png", name: "Fiorentina", country: "Italy", tier: 2, str: 78, colors: ["#4F2E7F", "#fff"] },
     { id: "val", file: "Valencia CF.png", name: "Valencia", country: "Spain", tier: 2, str: 77, colors: ["#FFDF00", "#000"] },
 
-    // --- TIER 3: STARTER / DEVELOPMENT (OVR <76) ---
+    // --- TIER 3: STARTER (OVR <76) ---
     { id: "hei", file: "1.FC Heidenheim 1846.png", name: "Heidenheim", country: "Germany", tier: 3, str: 72, colors: ["#E2001A", "#fff"] },
     { id: "ab", file: "Aberdeen FC.png", name: "Aberdeen", country: "Scotland", tier: 3, str: 68, colors: ["#D40E14", "#fff"] },
     { id: "aar", file: "Aarhus GF.png", name: "Aarhus", country: "Denmark", tier: 3, str: 66, colors: ["#fff", "#000"] },
