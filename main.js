@@ -75,16 +75,17 @@ const Game = {
             form: 1.0, 
             stats: { 
                 matches: 0, goals: 0, assists: 0, 
-                titles: 0, cups: 0, // Split titles
-                caps: 0, intGoals: 0, wcTitles: 0, 
-                ballonDor: 0,
-                peakOvr: 60 // Track Peak
+                titles: 0, cups: 0, caps: 0, intGoals: 0, wcTitles: 0, 
+                ballonDor: 0, peakOvr: 60 
             },
             history: []
         },
         locks: { startClub: false, transferWindow: false },
         offers: [],
-        introPlayed: false 
+        introPlayed: false,
+        // NEW: Difficulty State
+        difficulty: 'Normal',
+        difficultyMult: 1.0
     },
 
     // --- HUD ---
@@ -96,7 +97,7 @@ const Game = {
         
         const ovrEl = document.getElementById('hud-ovr');
         ovrEl.innerText = p.ovr;
-        if(p.ovr >= 90) ovrEl.style.color = "#E91E63"; // Mythical
+        if(p.ovr >= 90) ovrEl.style.color = "#E91E63"; 
         else if(p.ovr >= 85) ovrEl.style.color = "#FFD700"; 
         else if(p.ovr >= 75) ovrEl.style.color = "#4CAF50";
         else ovrEl.style.color = "#fff";
@@ -107,7 +108,7 @@ const Game = {
     render: (html) => document.getElementById('app').innerHTML = html,
     init: () => Game.renderSelection(),
 
-    // --- SELECTION SCREEN ---
+    // --- SELECTION SCREEN (WITH DIFFICULTY) ---
     renderSelection: () => {
         const positions = [
             {id:'GK', t:90, l:50}, {id:'LB', t:75, l:15}, {id:'CB', t:80, l:38}, 
@@ -115,6 +116,7 @@ const Game = {
             {id:'CAM', t:35, l:50}, {id:'LW', t:25, l:20}, {id:'RW', t:25, l:80}, 
             {id:'ST', t:15, l:50}
         ];
+        
         let html = `
             <div class="split-view">
                 <div class="panel-left">
@@ -128,7 +130,7 @@ const Game = {
                 </div>
                 <div class="panel-right">
                     <h2>2. NATIONALITY</h2>
-                    <div class="country-grid">
+                    <div class="country-grid" style="height: 200px; overflow-y: auto;">
                         ${COUNTRIES.map(c => `
                             <div class="country-card" id="nat-${c.code}" onclick="Game.selectNat('${c.name}', '${c.code}')">
                                 <img src="https://flagcdn.com/w80/${c.code}.png">
@@ -136,6 +138,16 @@ const Game = {
                             </div>
                         `).join('')}
                     </div>
+
+                    <div style="margin-top: 15px;">
+                        <h2 style="font-size: 1.8rem;">3. DIFFICULTY</h2>
+                        <div class="difficulty-btn-group">
+                            <button class="diff-btn" onclick="Game.selectDiff('Easy', 1.2, this)">Easy</button>
+                            <button class="diff-btn selected" onclick="Game.selectDiff('Normal', 1.0, this)">Normal</button>
+                            <button class="diff-btn" onclick="Game.selectDiff('Hard', 0.8, this)">Hard</button>
+                        </div>
+                    </div>
+
                     <button id="start-btn" class="btn" disabled onclick="Game.startGame()">Start Career</button>
                 </div>
             </div>
@@ -155,6 +167,14 @@ const Game = {
         document.getElementById(`nat-${code}`).classList.add('selected');
         Game.state.player.nat = nat;
         Game.checkReady();
+    },
+
+    // NEW: Handle Difficulty Selection
+    selectDiff: (level, mult, el) => {
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        Game.state.difficulty = level;
+        Game.state.difficultyMult = mult;
     },
 
     checkReady: () => {
@@ -282,6 +302,7 @@ const Game = {
                     <div style="color:#aaa;">Tier ${p.club.tier} • ${p.club.country}</div>
                     <hr style="border-color:#444">
                     <div>Form: <strong style="color:${p.form > 1 ? '#4caf50' : '#e53935'}">${p.form > 1 ? '🔥 On Fire' : '😐 Normal'}</strong></div>
+                    <div style="margin-top:5px; font-size:0.8rem; color:#888;">Mode: ${Game.state.difficulty}</div>
                 </div>
 
                 <div class="stat-card">
@@ -315,9 +336,11 @@ const Game = {
         Game.render(html);
     },
 
-    // --- SIMULATE SEASON (LOGIC OVERHAUL) ---
+    // --- SIMULATE SEASON (WITH DIFFICULTY LOGIC) ---
     simulateSeason: () => {
         const p = Game.state.player;
+        const diff = Game.state.difficultyMult || 1.0; // Get Multiplier
+
         Game.state.locks.transferWindow = false; 
         Game.state.offers = [];
 
@@ -329,33 +352,34 @@ const Game = {
         else if (roll < 0.15) { formFactor = 0.6; eventMsg = "Injury Struggles 🚑"; }
         p.form = formFactor;
 
-        // 2. DOMESTIC STATS
-        const games = 30 + Math.floor(Math.random() * 15); // More games in good teams
+        // 2. DOMESTIC STATS (Affected by Difficulty)
+        const games = 30 + Math.floor(Math.random() * 15); 
         let attackMod = 0.1;
         if (p.pos === 'ST') attackMod = 0.7;
         else if (p.pos === 'LW' || p.pos === 'RW') attackMod = 0.5;
         else if (p.pos === 'CAM') attackMod = 0.35;
 
-        const skillFactor = (p.ovr / 90); // Normalized to 90
-        let sGoals = Math.floor(games * attackMod * skillFactor * formFactor * (0.8 + Math.random()*0.4));
-        let sAssists = Math.floor(games * 0.25 * skillFactor * formFactor);
+        const skillFactor = (p.ovr / 90); 
+        
+        // APPLY DIFFICULTY TO STATS
+        let sGoals = Math.floor(games * attackMod * skillFactor * formFactor * diff * (0.8 + Math.random()*0.4));
+        let sAssists = Math.floor(games * 0.25 * skillFactor * formFactor * diff);
+        
         if (p.pos === 'GK' || p.pos.includes('B')) sGoals = Math.floor(Math.random() * 3);
 
-        // 3. INTERNATIONAL STATS (Caps & WC)
-        const isWCYear = (Game.state.season % 4 === 2); // Season 2, 6, 10...
+        // 3. INTERNATIONAL STATS
+        const isWCYear = (Game.state.season % 4 === 2);
         let newCaps = 0;
         let newIntGoals = 0;
         
         if (p.ovr > 78) {
             newCaps = 4 + Math.floor(Math.random() * 6);
-            if (isWCYear) newCaps += Math.floor(Math.random() * 5); // WC games
+            if (isWCYear) newCaps += Math.floor(Math.random() * 5);
             
-            // International Goals
             if (p.pos !== 'GK') {
-                newIntGoals = Math.floor(newCaps * attackMod * 0.5 * formFactor);
+                newIntGoals = Math.floor(newCaps * attackMod * 0.5 * formFactor * diff);
             }
             
-            // WC Title Chance
             if (isWCYear && p.ovr > 88 && Math.random() > 0.8) {
                 p.stats.wcTitles++;
                 eventMsg += " | 🏆 WORLD CUP WINNER!";
@@ -365,51 +389,44 @@ const Game = {
         p.stats.caps += newCaps;
         p.stats.intGoals += newIntGoals;
 
-        // 4. GROWTH FORMULA (90+ UNLOCKED)
-        // High Tier = High Training (Tier 1=5pts, Tier 3=2pts)
+        // 4. GROWTH FORMULA (Affected by Difficulty)
         const clubTraining = (4 - p.club.tier) * 2.5; 
         
         let ageEfficiency = 0;
         let decay = 0;
 
         if (p.age <= 22) {
-            ageEfficiency = 1.6; // Hyper growth
-            decay = 0;
+            ageEfficiency = 1.6; decay = 0;
         } else if (p.age <= 27) {
-            ageEfficiency = 0.8; // Peak maintenance
-            decay = 0;
+            ageEfficiency = 0.8; decay = 0;
         } else if (p.age <= 31) {
-            ageEfficiency = 0.2; // Plateau
-            decay = 1.0;
+            ageEfficiency = 0.2; decay = 1.0;
         } else {
-            ageEfficiency = 0.05; // Decline
-            decay = 3.0; // Heavy drop
+            ageEfficiency = 0.05; decay = 3.0;
         }
 
-        const perfBoost = (formFactor > 1.2) ? 3 : 0; // Performance rewards
+        const perfBoost = (formFactor > 1.2) ? 3 : 0; 
         
-        let potentialGrowth = (clubTraining + perfBoost) * ageEfficiency;
+        // APPLY DIFFICULTY TO GROWTH
+        let potentialGrowth = (clubTraining + perfBoost) * ageEfficiency * diff;
         let finalGrowth = Math.round(potentialGrowth - decay);
 
-        // Prevent overflow
         if (finalGrowth > 8) finalGrowth = 8;
         if (p.ovr + finalGrowth > 99) finalGrowth = 99 - p.ovr;
         
         p.ovr += finalGrowth;
-        if(p.ovr > p.stats.peakOvr) p.stats.peakOvr = p.ovr; // Update Peak
+        if(p.ovr > p.stats.peakOvr) p.stats.peakOvr = p.ovr;
 
-        // 5. DOMESTIC TITLES (LOGIC BASED)
-        // Only win if team is strong AND played matches
-        const teamStrength = p.club.str; // 65 to 94
-        const winProbability = (teamStrength / 100);
+        // 5. DOMESTIC TITLES
+        const teamStrength = p.club.str; 
+        const winProbability = (teamStrength / 100) * diff; // Harder to win titles on Hard
         
         if (Math.random() < winProbability && p.stats.matches > 10) {
-            if (Math.random() > 0.4) p.stats.titles++; // League
-            if (Math.random() > 0.6) p.stats.cups++; // Cup
+            if (Math.random() > 0.4) p.stats.titles++;
+            if (Math.random() > 0.6) p.stats.cups++;
         }
 
-        // 6. BALLON D'OR (STRICT LOGIC)
-        // Score = Goals*1.5 + Assists*1 + Titles*10 + (OVR > 90 bonus)
+        // 6. BALLON D'OR
         let bScore = (sGoals * 1.5) + (sAssists) + ((p.stats.titles + p.stats.wcTitles)*15);
         if (p.ovr >= 92) bScore += 20;
         
@@ -418,7 +435,6 @@ const Game = {
             eventMsg += " | 🥇 BALLON D'OR!";
         }
 
-        // Update Totals
         p.stats.matches += games;
         p.stats.goals += sGoals;
         p.stats.assists += sAssists;
@@ -440,17 +456,24 @@ const Game = {
         }
     },
 
-    // --- TRANSFER WINDOW ---
+    // --- TRANSFER WINDOW (WITH DIFFICULTY LOGIC) ---
     renderTransferWindow: (eventMsg) => {
         Game.updateHUD();
         const p = Game.state.player;
-        
+        const diff = Game.state.difficultyMult || 1.0;
+
         if (!Game.state.locks.transferWindow) {
             let maxTier = 3; let minTier = 3;
-            // High OVR unlocks Top Clubs
-            if (p.ovr >= 86) { maxTier = 1; minTier = 1; }
-            else if (p.ovr >= 80) { maxTier = 1; minTier = 2; }
-            else if (p.ovr >= 74) { maxTier = 2; minTier = 2; }
+            
+            // ADJUST REQUIREMENTS BASED ON DIFFICULTY
+            // Harder difficulty requires higher OVR for same tiers
+            const tier1Req = 86 / diff; 
+            const tier2Req = 80 / diff;
+            const tier3Req = 74 / diff;
+
+            if (p.ovr >= tier1Req) { maxTier = 1; minTier = 1; }
+            else if (p.ovr >= tier2Req) { maxTier = 1; minTier = 2; }
+            else if (p.ovr >= tier3Req) { maxTier = 2; minTier = 2; }
             else if (p.ovr >= 68) { maxTier = 2; minTier = 3; }
             
             let pool = CLUB_DB.filter(c => c.id !== p.club.id);
@@ -460,7 +483,6 @@ const Game = {
 
             let generatedOffers = [];
             
-            // Smart Offer Generation
             if (maxTier === 1 && eliteOffers.length > 0) 
                 generatedOffers.push(eliteOffers[Math.floor(Math.random()*eliteOffers.length)]);
             else if (midOffers.length > 0) 
@@ -516,7 +538,6 @@ const Game = {
         Game.updateHUD();
     },
 
-    // --- RETIREMENT (ENHANCED VISUALS) ---
     renderRetirement: () => {
         const p = Game.state.player;
         
