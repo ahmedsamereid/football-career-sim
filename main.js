@@ -164,32 +164,10 @@ const AnalysisEngine = {
 
 const Game = {
     state: {
-<<<<<<< HEAD
         season: 1, maxSeasons: 10,
         player: { pos: null, nat: null, avatarId: 1, age: 18, ovr: 60, club: null, form: 1.0, stats: { matches: 0, goals: 0, assists: 0, titles: 0, cups: 0, caps: 0, intGoals: 0, wcTitles: 0, ballonDor: 0, peakOvr: 60 }, history: [] },
         locks: { startClub: false, transferWindow: false },
         offers: [], introPlayed: false, difficulty: 'Normal', difficultyMult: 1.0
-=======
-        season: 1,
-        maxSeasons: 10, 
-        player: {
-            pos: null, nat: null, age: 18, ovr: 60,
-            club: null,
-            form: 1.0, 
-            stats: { 
-                matches: 0, goals: 0, assists: 0, 
-                titles: 0, cups: 0, caps: 0, intGoals: 0, wcTitles: 0, 
-                ballonDor: 0, peakOvr: 60 
-            },
-            history: []
-        },
-        locks: { startClub: false, transferWindow: false },
-        offers: [],
-        introPlayed: false,
-        // NEW: Difficulty State
-        difficulty: 'Normal',
-        difficultyMult: 1.0
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
     },
 
     updateHUD: () => {
@@ -199,26 +177,14 @@ const Game = {
         if(!header.querySelector('.header-content')) header.innerHTML = `<div class="header-content">${header.innerHTML}</div>`;
         document.getElementById('hud-season').innerText = `${Game.state.season}/${Game.state.maxSeasons}`;
         document.getElementById('hud-age').innerText = p.age;
-<<<<<<< HEAD
         const ovrEl = document.getElementById('hud-ovr'); ovrEl.innerText = p.ovr;
         if(p.ovr >= 90) ovrEl.style.color = "#E91E63"; else if(p.ovr >= 85) ovrEl.style.color = "#FFD700"; else if(p.ovr >= 75) ovrEl.style.color = "#4CAF50"; else ovrEl.style.color = "#fff";
-=======
-        
-        const ovrEl = document.getElementById('hud-ovr');
-        ovrEl.innerText = p.ovr;
-        if(p.ovr >= 90) ovrEl.style.color = "#E91E63"; 
-        else if(p.ovr >= 85) ovrEl.style.color = "#FFD700"; 
-        else if(p.ovr >= 75) ovrEl.style.color = "#4CAF50";
-        else ovrEl.style.color = "#fff";
-
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         document.getElementById('hud-club').innerText = p.club ? p.club.name : "Free Agent";
     },
 
     render: (html) => document.getElementById('app').innerHTML = html,
     init: () => Game.renderSelection(),
 
-<<<<<<< HEAD
     renderSelection: () => {
         const positions = [{id:'GK', t:90, l:50}, {id:'LB', t:75, l:15}, {id:'CB', t:80, l:38}, {id:'CB', t:80, l:62}, {id:'RB', t:75, l:85}, {id:'CM', t:55, l:50}, {id:'CAM', t:35, l:50}, {id:'LW', t:20, l:15}, {id:'ST', t:15, l:50}, {id:'RW', t:20, l:85}];
         let html = `
@@ -226,52 +192,6 @@ const Game = {
                 <div class="panel-left"><h2>1. POSITION</h2><div class="pitch-container">${positions.map(p => `<div class="pos-dot" style="top:${p.t}%; left:${p.l}%" onclick="Game.selectPos('${p.id}', this)">${p.id}</div>`).join('')}</div><div class="avatar-section-wrapper"><h2>3. LOOK</h2><div class="avatar-grid">${AVATARS.map(a => `<div class="avatar-option" id="av-${a.id}" onclick="Game.selectAvatar(${a.id})">${getAvatarSVG(a.id, false)}</div>`).join('')}</div></div></div>
                 <div class="panel-right"><h2>2. NATIONALITY</h2><div class="country-grid">${COUNTRIES.map(c => `<div class="country-card" id="nat-${c.code}" onclick="Game.selectNat('${c.name}', '${c.code}', ${c.group})"><img src="https://flagcdn.com/w80/${c.code}.png"><span class="country-name">${c.name}</span></div>`).join('')}</div><div class="controls-wrapper"><h2>4. DIFFICULTY</h2><div class="difficulty-btn-group"><button class="diff-btn" onclick="Game.selectDiff('Easy', 1.2, this)">Easy</button><button class="diff-btn selected" onclick="Game.selectDiff('Normal', 1.0, this)">Normal</button><button class="diff-btn" onclick="Game.selectDiff('Hard', 0.8, this)">Hard</button></div><button id="start-btn" class="btn" disabled onclick="Game.startGame()">Start Career</button></div></div>
             </div>`;
-=======
-    // --- SELECTION SCREEN (WITH DIFFICULTY) ---
-    renderSelection: () => {
-        const positions = [
-            {id:'GK', t:90, l:50}, {id:'LB', t:75, l:15}, {id:'CB', t:80, l:38}, 
-            {id:'CB', t:80, l:62}, {id:'RB', t:75, l:85}, {id:'CM', t:55, l:50}, 
-            {id:'CAM', t:35, l:50}, {id:'LW', t:25, l:20}, {id:'RW', t:25, l:80}, 
-            {id:'ST', t:15, l:50}
-        ];
-        
-        let html = `
-            <div class="split-view">
-                <div class="panel-left">
-                    <h2>1. POSITION</h2>
-                    <div class="pitch-container">
-                        ${positions.map(p => `
-                            <div class="pos-dot" style="top:${p.t}%; left:${p.l}%" 
-                            onclick="Game.selectPos('${p.id}', this)">${p.id}</div>
-                        `).join('')}
-                    </div>
-                </div>
-                <div class="panel-right">
-                    <h2>2. NATIONALITY</h2>
-                    <div class="country-grid" style="height: 200px; overflow-y: auto;">
-                        ${COUNTRIES.map(c => `
-                            <div class="country-card" id="nat-${c.code}" onclick="Game.selectNat('${c.name}', '${c.code}')">
-                                <img src="https://flagcdn.com/w80/${c.code}.png">
-                                <span class="country-name">${c.name}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <div style="margin-top: 15px;">
-                        <h2 style="font-size: 1.8rem;">3. DIFFICULTY</h2>
-                        <div class="difficulty-btn-group">
-                            <button class="diff-btn" onclick="Game.selectDiff('Easy', 1.2, this)">Easy</button>
-                            <button class="diff-btn selected" onclick="Game.selectDiff('Normal', 1.0, this)">Normal</button>
-                            <button class="diff-btn" onclick="Game.selectDiff('Hard', 0.8, this)">Hard</button>
-                        </div>
-                    </div>
-
-                    <button id="start-btn" class="btn" disabled onclick="Game.startGame()">Start Career</button>
-                </div>
-            </div>
-        `;
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         Game.render(html);
     },
 
@@ -281,30 +201,7 @@ const Game = {
     selectDiff: (level, mult, el) => { document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected')); el.classList.add('selected'); Game.state.difficulty = level; Game.state.difficultyMult = mult; },
     checkReady: () => { if(Game.state.player.pos && Game.state.player.nat) document.getElementById('start-btn').disabled = false; },
 
-<<<<<<< HEAD
     // --- START GAME (With Difficulty & Nat Group Logic) ---
-=======
-    selectNat: (nat, code) => {
-        document.querySelectorAll('.country-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById(`nat-${code}`).classList.add('selected');
-        Game.state.player.nat = nat;
-        Game.checkReady();
-    },
-
-    // NEW: Handle Difficulty Selection
-    selectDiff: (level, mult, el) => {
-        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        Game.state.difficulty = level;
-        Game.state.difficultyMult = mult;
-    },
-
-    checkReady: () => {
-        if(Game.state.player.pos && Game.state.player.nat) document.getElementById('start-btn').disabled = false;
-    },
-
-    // --- START GAME ---
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
     startGame: () => {
         const p = Game.state.player;
         
@@ -367,7 +264,6 @@ const Game = {
     renderDashboard: () => {
         const p = Game.state.player;
         const logoHTML = getLogoSafe(p.club);
-<<<<<<< HEAD
         const avatarSVG = getAvatarSVG(p.avatarId, false); 
         let html = `<div class="dashboard-grid"><div class="stat-card"><h3>PLAYER PROFILE</h3><div style="width:100px; height:100px; margin:0 auto; border-radius:50%; overflow:hidden; border:2px solid #555; background:#333; display:flex; justify-content:center; align-items:center;"><div style="width:100%; height:100%;">${avatarSVG}</div></div><div style="font-size:1.5rem; font-weight:bold; margin-top:5px;">${p.name || 'YOU'}</div><div style="color:#aaa;">${p.pos} • ${p.nat}</div></div><div class="stat-card"><h3>CURRENT CLUB</h3><div style="display:flex; justify-content:center; margin:10px;">${logoHTML}</div><div style="font-size:1.5rem; font-weight:bold;">${p.club.name}</div><div style="color:#aaa;">Tier ${p.club.tier} • ${p.club.country}</div><hr style="border-color:#444"><div>Form: <strong style="color:${p.form > 1 ? '#4caf50' : '#e53935'}">${p.form > 1 ? '🔥 On Fire' : '😐 Normal'}</strong></div></div><div class="stat-card"><h3>CAREER STATS</h3><table class="stat-table"><tr><td>Matches</td><td>${p.stats.matches}</td></tr><tr><td>Goals</td><td>${p.stats.goals} (Int: ${p.stats.intGoals})</td></tr><tr><td>Assists</td><td>${p.stats.assists}</td></tr><tr><td>Trophies</td><td>🏆 ${p.stats.titles + p.stats.cups}</td></tr><tr><td>Awards</td><td style="color:#FFD700">${p.stats.ballonDor > 0 ? '🏆 x'+p.stats.ballonDor : '-'}</td></tr></table></div></div><div style="text-align:center; margin-top:30px;"><button class="btn btn-gold" onclick="Game.simulateSeason()">Simulate Season (+2 Years)</button></div>`;
         Game.render(html);
@@ -377,67 +273,11 @@ const Game = {
         const p = Game.state.player;
         const diffMult = Game.state.difficultyMult; 
         Game.state.locks.transferWindow = false; Game.state.offers = [];
-=======
-
-        let html = `
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <h3>CURRENT CLUB</h3>
-                    <div style="display:flex; justify-content:center; margin:10px;">${logoHTML}</div>
-                    <div style="font-size:1.5rem; font-weight:bold;">${p.club.name}</div>
-                    <div style="color:#aaa;">Tier ${p.club.tier} • ${p.club.country}</div>
-                    <hr style="border-color:#444">
-                    <div>Form: <strong style="color:${p.form > 1 ? '#4caf50' : '#e53935'}">${p.form > 1 ? '🔥 On Fire' : '😐 Normal'}</strong></div>
-                    <div style="margin-top:5px; font-size:0.8rem; color:#888;">Mode: ${Game.state.difficulty}</div>
-                </div>
-
-                <div class="stat-card">
-                    <h3>STATS TRACKER</h3>
-                    <table class="stat-table">
-                        <tr><td>Matches</td><td>${p.stats.matches}</td></tr>
-                        <tr><td>Goals</td><td>${p.stats.goals} (Int: ${p.stats.intGoals})</td></tr>
-                        <tr><td>Assists</td><td>${p.stats.assists}</td></tr>
-                        <tr><td>Trophies</td><td>L: ${p.stats.titles} | C: ${p.stats.cups} | WC: ${p.stats.wcTitles}</td></tr>
-                        <tr><td>Caps</td><td>${p.stats.caps}</td></tr>
-                        <tr><td>Awards</td><td style="color:#FFD700">${p.stats.ballonDor > 0 ? '🏆 x'+p.stats.ballonDor : '-'}</td></tr>
-                    </table>
-                </div>
-
-                <div class="stat-card">
-                    <h3>CAREER HISTORY</h3>
-                    <div style="max-height:150px; overflow-y:auto; font-size:0.8rem; text-align:left;">
-                        ${p.history.map(h => `
-                            <div style="border-bottom:1px solid #444; padding:5px;">
-                                <strong>S${h.season}:</strong> ${h.club} (${h.diff})
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align:center; margin-top:30px;">
-                <button class="btn btn-gold" onclick="Game.simulateSeason()">Simulate Season (+2 Years)</button>
-            </div>
-        `;
-        Game.render(html);
-    },
-
-    // --- SIMULATE SEASON (WITH DIFFICULTY LOGIC) ---
-    simulateSeason: () => {
-        const p = Game.state.player;
-        const diff = Game.state.difficultyMult || 1.0; // Get Multiplier
-
-        Game.state.locks.transferWindow = false; 
-        Game.state.offers = [];
-
-        // 1. FORM & VIBE
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         const roll = Math.random();
         let formFactor = 1.0; let eventMsg = "Standard Season";
         if (roll > 0.85) { formFactor = 1.5; eventMsg = "BREAKOUT SEASON! 🌟"; }
         else if (roll < 0.15) { formFactor = 0.6; eventMsg = "Injury Struggles 🚑"; }
         p.form = formFactor;
-<<<<<<< HEAD
         const games = 30 + Math.floor(Math.random() * 15); 
         let attackMod = 0.1;
         if (p.pos === 'ST') attackMod = 0.7; else if (p.pos === 'LW' || p.pos === 'RW') attackMod = 0.5; else if (p.pos === 'CAM') attackMod = 0.35;
@@ -452,83 +292,19 @@ const Game = {
             if (isWCYear) newCaps += Math.floor(Math.random() * 5);
             if (p.pos !== 'GK') newIntGoals = Math.floor(newCaps * attackMod * 0.5 * formFactor * diffMult);
             if (isWCYear && p.ovr > 88 && Math.random() > 0.8) { p.stats.wcTitles++; eventMsg += " | 🏆 WORLD CUP WINNER!"; }
-=======
-
-        // 2. DOMESTIC STATS (Affected by Difficulty)
-        const games = 30 + Math.floor(Math.random() * 15); 
-        let attackMod = 0.1;
-        if (p.pos === 'ST') attackMod = 0.7;
-        else if (p.pos === 'LW' || p.pos === 'RW') attackMod = 0.5;
-        else if (p.pos === 'CAM') attackMod = 0.35;
-
-        const skillFactor = (p.ovr / 90); 
-        
-        // APPLY DIFFICULTY TO STATS
-        let sGoals = Math.floor(games * attackMod * skillFactor * formFactor * diff * (0.8 + Math.random()*0.4));
-        let sAssists = Math.floor(games * 0.25 * skillFactor * formFactor * diff);
-        
-        if (p.pos === 'GK' || p.pos.includes('B')) sGoals = Math.floor(Math.random() * 3);
-
-        // 3. INTERNATIONAL STATS
-        const isWCYear = (Game.state.season % 4 === 2);
-        let newCaps = 0;
-        let newIntGoals = 0;
-        
-        if (p.ovr > 78) {
-            newCaps = 4 + Math.floor(Math.random() * 6);
-            if (isWCYear) newCaps += Math.floor(Math.random() * 5);
-            
-            if (p.pos !== 'GK') {
-                newIntGoals = Math.floor(newCaps * attackMod * 0.5 * formFactor * diff);
-            }
-            
-            if (isWCYear && p.ovr > 88 && Math.random() > 0.8) {
-                p.stats.wcTitles++;
-                eventMsg += " | 🏆 WORLD CUP WINNER!";
-            }
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         }
         p.stats.caps += newCaps; p.stats.intGoals += newIntGoals;
         
-<<<<<<< HEAD
         const clubTraining = (4 - p.club.tier) * 2.5; 
         let ageEfficiency = 0; let decay = 0;
         if (p.age <= 22) { ageEfficiency = 1.6; decay = 0; } else if (p.age <= 27) { ageEfficiency = 0.8; decay = 0; } else if (p.age <= 31) { ageEfficiency = 0.2; decay = 1.0; } else { ageEfficiency = 0.05; decay = 3.0; }
         const perfBoost = (formFactor > 1.2) ? 3 : 0; 
         let potentialGrowth = (clubTraining + perfBoost) * ageEfficiency * diffMult;
         let finalGrowth = Math.round(potentialGrowth - decay);
-=======
-        p.stats.caps += newCaps;
-        p.stats.intGoals += newIntGoals;
-
-        // 4. GROWTH FORMULA (Affected by Difficulty)
-        const clubTraining = (4 - p.club.tier) * 2.5; 
-        
-        let ageEfficiency = 0;
-        let decay = 0;
-
-        if (p.age <= 22) {
-            ageEfficiency = 1.6; decay = 0;
-        } else if (p.age <= 27) {
-            ageEfficiency = 0.8; decay = 0;
-        } else if (p.age <= 31) {
-            ageEfficiency = 0.2; decay = 1.0;
-        } else {
-            ageEfficiency = 0.05; decay = 3.0;
-        }
-
-        const perfBoost = (formFactor > 1.2) ? 3 : 0; 
-        
-        // APPLY DIFFICULTY TO GROWTH
-        let potentialGrowth = (clubTraining + perfBoost) * ageEfficiency * diff;
-        let finalGrowth = Math.round(potentialGrowth - decay);
-
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         if (finalGrowth > 8) finalGrowth = 8;
         if (p.ovr + finalGrowth > 99) finalGrowth = 99 - p.ovr;
         p.ovr += finalGrowth; if(p.ovr > p.stats.peakOvr) p.stats.peakOvr = p.ovr;
         
-<<<<<<< HEAD
         if (Math.random() < (p.club.str / 100) && p.stats.matches > 10) { if (Math.random() > 0.4) p.stats.titles++; if (Math.random() > 0.6) p.stats.cups++; }
         let bScore = (sGoals * 1.5) + (sAssists) + ((p.stats.titles + p.stats.wcTitles)*15);
         if (p.ovr >= 92) bScore += 20;
@@ -591,69 +367,6 @@ const Game = {
             } else {
                 targetTier = 3; // Weak or restricted
             }
-=======
-        p.ovr += finalGrowth;
-        if(p.ovr > p.stats.peakOvr) p.stats.peakOvr = p.ovr;
-
-        // 5. DOMESTIC TITLES
-        const teamStrength = p.club.str; 
-        const winProbability = (teamStrength / 100) * diff; // Harder to win titles on Hard
-        
-        if (Math.random() < winProbability && p.stats.matches > 10) {
-            if (Math.random() > 0.4) p.stats.titles++;
-            if (Math.random() > 0.6) p.stats.cups++;
-        }
-
-        // 6. BALLON D'OR
-        let bScore = (sGoals * 1.5) + (sAssists) + ((p.stats.titles + p.stats.wcTitles)*15);
-        if (p.ovr >= 92) bScore += 20;
-        
-        if (bScore > 100 && Math.random() > 0.6) {
-            p.stats.ballonDor++;
-            eventMsg += " | 🥇 BALLON D'OR!";
-        }
-
-        p.stats.matches += games;
-        p.stats.goals += sGoals;
-        p.stats.assists += sAssists;
-
-        p.history.unshift({
-            season: Game.state.season,
-            club: p.club.name,
-            diff: finalGrowth >= 0 ? `+${finalGrowth}` : finalGrowth,
-            ovr: p.ovr
-        });
-
-        Game.state.season++;
-        p.age += 2; 
-
-        if (Game.state.season > Game.state.maxSeasons || p.age > 38) {
-            Game.renderRetirement();
-        } else {
-            Game.renderTransferWindow(eventMsg);
-        }
-    },
-
-    // --- TRANSFER WINDOW (WITH DIFFICULTY LOGIC) ---
-    renderTransferWindow: (eventMsg) => {
-        Game.updateHUD();
-        const p = Game.state.player;
-        const diff = Game.state.difficultyMult || 1.0;
-
-        if (!Game.state.locks.transferWindow) {
-            let maxTier = 3; let minTier = 3;
-            
-            // ADJUST REQUIREMENTS BASED ON DIFFICULTY
-            // Harder difficulty requires higher OVR for same tiers
-            const tier1Req = 86 / diff; 
-            const tier2Req = 80 / diff;
-            const tier3Req = 74 / diff;
-
-            if (p.ovr >= tier1Req) { maxTier = 1; minTier = 1; }
-            else if (p.ovr >= tier2Req) { maxTier = 1; minTier = 2; }
-            else if (p.ovr >= tier3Req) { maxTier = 2; minTier = 2; }
-            else if (p.ovr >= 68) { maxTier = 2; minTier = 3; }
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
             
             let pool = CLUB_DB.filter(c => c.id !== p.club.id);
             let tierPool = pool.filter(c => c.tier === targetTier);
@@ -662,17 +375,9 @@ const Game = {
             if (tierPool.length === 0) tierPool = pool.filter(c => c.tier === 3);
 
             let generatedOffers = [];
-<<<<<<< HEAD
             for (let i = 0; i < 3; i++) {
                 generatedOffers.push(tierPool[Math.floor(Math.random() * tierPool.length)]);
             }
-=======
-            
-            if (maxTier === 1 && eliteOffers.length > 0) 
-                generatedOffers.push(eliteOffers[Math.floor(Math.random()*eliteOffers.length)]);
-            else if (midOffers.length > 0) 
-                generatedOffers.push(midOffers[Math.floor(Math.random()*midOffers.length)]);
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
 
             Game.state.offers = [...new Set(generatedOffers)];
             Game.state.locks.transferWindow = true; 
@@ -689,12 +394,6 @@ const Game = {
 
     renderRetirement: async () => {
         Game.updateHUD();
-<<<<<<< HEAD
-=======
-    },
-
-    renderRetirement: () => {
->>>>>>> e2a91509367e507ae1b196ead4bff7c0a9cdfdc0
         const p = Game.state.player;
         const container = document.getElementById('app');
         container.innerHTML = `<div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; color:white;"><h2>Analyzing Career...</h2><p>Generating FIFA Ultimate Team Card...</p><div class="draft-spinner" style="width:50px; height:50px; border-width:4px;"></div></div>`;
